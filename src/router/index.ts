@@ -1,24 +1,48 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 
-const routes: Array<RouteRecordRaw> = [
+
+const routes = [
   {
     path: '/',
     name: 'Home',
+    meta: {layout:'MainLayout'},
     component: Home
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+    path: '/salary',
+    name: 'Salary',
+    meta: {layout:'MainLayout'},
+    component: () => import('@/views/Salary.vue')
+  },
+  // {
+  //   path: '/overSpeed',
+  //   name: 'OverSpeed',
+  //   meta: {layout:'MainLayout'},
+  //   component: () => import('@/views/OverSpeed')
+  // },
+  // {
+  //   path: '/convertingTime',
+  //   name: 'ConvertingTime',
+  //   meta: {layout:'MainLayout'},
+  //   component: () => import('@/views/СonvertingTime')
+  // },
+  // {
+  //   path: '/plusTime',
+  //   name: 'PlusTime',
+  //   meta: {layout:'MainLayout'},
+  //   component: () => import('@/views/PlusTime')
+  // },
+  // {
+  //   path: '/phrasesPage',
+  //   name: 'PhrasesPage',
+  //   meta: {layout:'MainLayout'},
+  //   component: () => import('@/views/PhrasesPage')
+  // },
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHashHistory(process.env.BASE_URL),
   routes
 })
 
