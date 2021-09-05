@@ -40,7 +40,7 @@
               :to="link.url"
               :key="link.title"
           >
-            <v-list-item @click="navigate" >
+            <v-list-item @click="navigate; show = false" >
               <v-hover  v-slot="{ hover, props }">
                   <v-card
                       class="test"
