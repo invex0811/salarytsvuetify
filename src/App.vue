@@ -16,15 +16,26 @@ export default defineComponent({
   components: {Navbar}
 })
 </script>
+
+
 <style>
-
-
 *{
   font-family: Roboto, sans-serif;
+}
+.container{
+  padding-top: 60px;
+  height: 100vh;
+  background-color: #EEEEEE;
+}
+.center__container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 input[type='number']{
   border-bottom: 2px solid black;
   font-size: 18px;
+  padding: 0 3px 0 3px;
 }
 input:focus{
   outline: none;

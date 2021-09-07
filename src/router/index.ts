@@ -15,12 +15,12 @@ const routes = [
     meta: {layout:'MainLayout'},
     component: () => import('@/views/Salary.vue')
   },
-  // {
-  //   path: '/overSpeed',
-  //   name: 'OverSpeed',
-  //   meta: {layout:'MainLayout'},
-  //   component: () => import('@/views/OverSpeed')
-  // },
+  {
+    path: '/overSpeed',
+    name: 'OverSpeed',
+    meta: {layout:'MainLayout'},
+    component: () => import('@/views/OverSpeed.vue')
+  },
   // {
   //   path: '/convertingTime',
   //   name: 'ConvertingTime',

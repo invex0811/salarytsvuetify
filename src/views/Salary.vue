@@ -1,6 +1,6 @@
 <template>
- <v-container class="container" fluid>
-   <v-card min-width="600px" ove>
+ <v-container class="container center__container" fluid>
+   <v-card min-width="600px" >
      <v-card-header>
        <v-row justify="center">
          <v-col cols="6">
@@ -86,9 +86,13 @@
              <td>Time per test: </td>
              <td>{{timeTest}}</td>
            </tr>
+           <tr v-if="input__test">
+             <td>Cash per test: </td>
+             <td>{{plusTest}}</td>
+           </tr>
            <tr v-if="this.workingTime > 176">
              <td>Over time: </td>
-             <td>{{overTime}}</td>
+             <td>{{overTime.toFixed(2)}}</td>
            </tr>
            <tr>
              <td>Rate: </td>
@@ -156,6 +160,8 @@ export default defineComponent({
       totalMoney: 0,
       totalTestPercent: 0,
       timeTest: 0,
+      timeTestMoney: 0,
+      checkBtnClick: false
       }
     },
   methods:{
@@ -164,6 +170,7 @@ export default defineComponent({
       this.overTime = this.totalTime - 176
       this.overRate = this.rate * 1.5
       this.totalTestPercent = (this.firstTest + this.secondTest) / 2
+
 
       if (this.totalTestPercent >= 91){
         this.timeTest = 8
@@ -174,14 +181,16 @@ export default defineComponent({
       }else if (this.totalTestPercent >= 60 && this.totalTestPercent <= 70) {
         this.timeTest = 0
       }else if (this.totalTestPercent < 60) {
-        this.totalTime -= 4
         this.timeTest = '-4'
-       }
+      }
 
+      // function minusTestTotal(tm, tt) {
+      //
+      // }
 
-      if (this.totalTime > 176){
+      if (this.totalTime < 176){
         this.totalMoney = this.totalTime * this.rate
-      } else if (this.totalTime < 176){
+      } else if (this.totalTime > 176){
           if (this.rate <= 2){
             this.totalMoney = this.totalTime * this.rate
           }
@@ -189,6 +198,15 @@ export default defineComponent({
             this.totalMoney = (176 * this.rate + (this.overTime * this.overRate))
           }
         }
+      this.checkBtnClick = true
+    },
+    plusTestTotal(ttm, tt, rt) {
+      if (this.totalTestPercent > 60){
+        ttm = ttm + tt * rt
+      }else {
+        ttm = ttm - 4 * rt
+      }
+      return ttm
     }
   },
   computed:{
@@ -196,7 +214,8 @@ export default defineComponent({
       return this.totalMoney / 100 * (this.input__4percentWeekend * 4)
     },
     plusTest(){
-      return this.timeTest * (this.rate * this.input__test)
+       // return this.timeTest * (this.rate * this.input__test)
+      return this.plusTestTotal(this.timeTestMoney, this.timeTest, this.rate) * this.input__test
     },
     plusTax(){
       return 45 * this.input__tax
@@ -208,27 +227,15 @@ export default defineComponent({
       return this.cashBonus * this.input__cashBonus
     },
     result(){
-      return Math.floor(this.totalMoney +(this.plus4percentWeekend + this.plusTest + this.plusTax + this.plusTimeX2 + this.plusCashBonus ))
-    }
-  },
-  watch:{
-    checkTestStatus(){
-      return this.input__test === false ? this.timeTest = 0 : this.timeTest
+      return Math.round(this.totalMoney +(this.plus4percentWeekend + this.plusTest + this.plusTax + this.plusTimeX2 + this.plusCashBonus ))
     },
-  }
+  },
   })
 </script>
 
 <style scoped>
 
-  .container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 60px;
-    background: #EEEEEE;
-    height: 100vh;
-  }
+
   table{
     margin-left: 66px;
   }
