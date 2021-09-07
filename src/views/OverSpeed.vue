@@ -92,7 +92,6 @@ export default {
 
       //no UI
       result: '',
-
     }
   },
   methods: {
