@@ -16,29 +16,12 @@ const routes = [
     component: () => import('@/views/Salary.vue')
   },
   {
-    path: '/overSpeed',
-    name: 'OverSpeed',
+    path: '/mapStatesUSA',
+    name: 'mapStatesUSA',
     meta: {layout:'MainLayout'},
-    component: () => import('@/views/OverSpeed.vue')
+    component: () => import('@/views/MapStatesUSA.vue')
   },
-  // {
-  //   path: '/convertingTime',
-  //   name: 'ConvertingTime',
-  //   meta: {layout:'MainLayout'},
-  //   component: () => import('@/views/СonvertingTime')
-  // },
-  // {
-  //   path: '/plusTime',
-  //   name: 'PlusTime',
-  //   meta: {layout:'MainLayout'},
-  //   component: () => import('@/views/PlusTime')
-  // },
-  // {
-  //   path: '/phrasesPage',
-  //   name: 'PhrasesPage',
-  //   meta: {layout:'MainLayout'},
-  //   component: () => import('@/views/PhrasesPage')
-  // },
+  
 ]
 
 const router = createRouter({

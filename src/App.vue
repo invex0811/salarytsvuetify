@@ -19,6 +19,9 @@ export default defineComponent({
 
 
 <style>
+html{
+  overflow: hidden;
+}
 *{
   font-family: Roboto, sans-serif;
 }
@@ -32,7 +35,7 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
 }
-input[type='number']{
+input[type='number'],input[type='text']{
   border-bottom: 2px solid black;
   font-size: 18px;
   padding: 0 3px 0 3px;
@@ -101,6 +104,10 @@ input::-webkit-inner-spin-button {
   transform: scale(1) rotate(-45deg);
 }
 /* END CHECKBOX STYLE */
-
-
+select{
+  border: 2px solid #4527A0;
+  border-radius: 2px;
+  padding: 1px 2px;
+  cursor: pointer;
+}
 </style>

@@ -25,8 +25,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.fullscreen-bg {
 
+.fullscreen-bg {
   position: fixed;
   height: 100%;
   width: 100%;
