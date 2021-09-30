@@ -1,9 +1,11 @@
 <template>
  <v-container class="container center__container" fluid>
     <v-card position="absolute" right="10" class="pa-3">
+      <!-- Rate dollar API -->
      <v-card-header-text>
        Курс $ на {{this.exchangeDate}} : {{infoCurentDollar}}
      </v-card-header-text>
+     <!-- End -->
     </v-card>
     <v-card min-width="600px" >
      <v-card-header>
@@ -13,6 +15,7 @@
          </v-col>
        </v-row>
      </v-card-header>
+     <!-- Inputs data -->
      <v-card-header-text class="pa-5">
        <v-row justify="center">
          <v-col cols="6" style="text-align: center">
@@ -53,16 +56,21 @@
          </v-col>
        </v-row>
        <v-row justify="center" v-if="input__dollarExchange">
-         <!-- <v-col cols="2">
-           <label class="checkbox">
-             <input type="checkbox" v-model="input__currentRateDollar"> <span>Current rate</span>
-           </label>
-         </v-col> -->
          <v-col cols="6" style="text-align: center">
+           <v-badge
+            icon=" mdi-currency-usd"
+            offset-x="15"
+            offset-y="4"
+            @click="inputCurencyUsdRare"
+            title="Current rate USD"
+           >
            <input type="number" v-model.number="dollarRate" placeholder="Dollar rate">
+           </v-badge>
          </v-col>
        </v-row>
      </v-card-header-text>
+     <!-- End inputs data -->
+     <!-- Checkbox  -->
      <v-card-actions>
        <v-col style="text-align: center">
         <v-row no-gutters justify="space-around">
@@ -102,44 +110,56 @@
        </v-col>
        
      </v-card-actions>
+     <!-- End checkbox -->
+     <!-- Button -->
      <v-card-actions>
        <v-row justify="center">
-         <v-btn color="deep-purple darken-2" @click="calculateSalary">
+         <v-btn color="deep-purple darken-2" @click="calculateSalary" style="color: #fff">
            Ok
          </v-btn>
        </v-row>
      </v-card-actions>
+     <!-- End button -->
      <v-divider class="my-2"></v-divider>
+     <!-- Output data -->
      <v-row justify="center">
        <v-col cols="12" class="center mr-2">
          <table v-if="more__info">
            <tr>
              <td>Working time: </td>
-             <td> {{totalTime}} </td>
+             <td> {{totalTime + ' h'}} </td>
            </tr>
-           <tr v-if="input__test">
-             <td>Time per test: </td>
-             <td>{{timeTest}}</td>
-           </tr>
-           <tr v-if="input__test">
-             <td>Cash per test: </td>
-             <td>{{plusTest}}</td>
-           </tr>
-           <tr v-if="this.workingTime > 176">
-             <td>Over time: </td>
-             <td>{{overTime.toFixed(2)}}</td>
+           <tr>
+             <td>Working day hours: </td>
+             <td> {{workDayTime + ' h'}} </td>
            </tr>
            <tr>
              <td>Rate: </td>
-             <td> {{rate}} </td>
+             <td> {{rateOutput}} $</td>
            </tr>
            <tr>
              <td>Over rate: </td>
-             <td>{{overRate}}</td>
+             <td>{{overRate}} $</td>
            </tr>
-           <tr>
+           <tr v-if="overTime > 0">
+             <td>Over time: </td>
+             <td>{{overTime.toFixed(2)  + ' h'}}</td>
+           </tr>
+           <tr v-if="overTime > 0">
+             <td>Over time cash: </td>
+             <td>{{overTimeCach.toFixed(2)}} $</td>
+           </tr>
+           <tr v-if="input__test">
+             <td>Time per test: </td>
+             <td>{{timeTest + ' h'}}</td>
+           </tr>
+           <tr v-if="input__test">
+             <td>Cash per test: </td>
+             <td>{{plusTest}} $</td>
+           </tr>           
+           <tr v-if="input__timeX2">
              <td>TimeX2 cash: </td>
-             <td>{{plusTimeX2}}</td>
+             <td>{{plusTimeX2}} $</td>
            </tr>
          </table>
          </v-col>
@@ -147,8 +167,8 @@
      <v-row justify="center">
           <v-col cols="12" style="text-align: center">
                 Total cash: 
-                {{result + '$'}}
-                <span v-if="this.dollarRate > 0"> | {{ exchangeMonayToUAH + ' UAH'}}</span>
+                {{result + ' $'}}
+                <span v-if="this.dollarRate > 0"> | {{ exchangeMonayToUAH.toFixed(2) + ' UAH'}}</span>
                 <v-btn
                     icon
                     size="x-small"
@@ -162,6 +182,7 @@
                 </v-btn>
           </v-col>
      </v-row>
+     <!-- End output data -->
     </v-card>
  </v-container>
   <router-view/>
@@ -197,6 +218,7 @@ export default defineComponent({
       // no UI variables
       totalTime: 0,
       overTime: 0,
+      rateOutput: 0, //Для глаза чтобы тоже было ноль если убрать убедт просто пустая строка "не красиво")))
       overRate: 0,
       totalMoney: 0,
       totalTestPercent: 0,
@@ -206,21 +228,26 @@ export default defineComponent({
       workDayTime: 0,
       infoCurentDollar: null,
       exchangeDate: null,
+      overTimeCach: 0,
+      // axios error
+      axiosError: ''
       }
     },
     mounted(){
       axios
         .get('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json')
         .then(response => (this.infoCurentDollar = response.data[26].rate, this.exchangeDate = response.data[26].exchangedate))
-        .catch(error => console.log(error));
+        .catch(error => this.infoCurentDollar = error);
     },
     methods:{
       calculateSalary(){
+        this.rateOutput = this.rate                                     // Читать выше для чего эта шляпа
         this.workDayTime = this.workDay * 8
         this.totalTime = this.workingTime
         this.overTime = this.totalTime - this.workDayTime
         this.overRate = this.rate * 1.5
         this.totalTestPercent = (this.firstTest + this.secondTest) / 2
+        this.overTimeCach = this.overTime * this.overRate
 
 
         if (this.totalTestPercent >= 91){
@@ -235,13 +262,10 @@ export default defineComponent({
           this.timeTest = '-4'
         }
 
-        // function minusTestTotal(tm, tt) {
-        //
-        // }
 
         if (this.totalTime < this.workDayTime){
           this.totalMoney = this.totalTime * this.rate
-        } else if (this.totalTime > this.workDayTime){
+        } else if (this.totalTime >= this.workDayTime){
             if (this.rate <= 2){
               this.totalMoney = this.totalTime * this.rate
             }
@@ -259,6 +283,9 @@ export default defineComponent({
           ttm = ttm - 4 * rt
         }
         return ttm
+      },
+      inputCurencyUsdRare(){
+        this.dollarRate = this.infoCurentDollar
       }
     },
     
@@ -297,15 +324,12 @@ export default defineComponent({
     display: flex;
     justify-content: center;
   }
-
-  table{
-    
-  }
   td{
     padding: 0 2px;
   }
   .info__icon:hover{
     cursor: pointer;
     color: #311B92;
+    
   }
 </style>
