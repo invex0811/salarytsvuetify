@@ -1,12 +1,31 @@
 <template>
  <v-container class="container center__container" fluid>
+   <!-- Rate dollar API -->
     <v-card position="absolute" right="10" class="pa-3">
-      <!-- Rate dollar API -->
      <v-card-header-text>
-       Курс $ на {{this.exchangeDate}} : {{infoCurentDollar}}
+       <v-row>
+         <v-col cols="12">
+          Курс {{this.valut}} на {{this.exchangeDate}} : {{infoCurentDollar}}
+         </v-col>
+       </v-row>
+       <v-row>
+         <v-col>
+           <input type="date" v-model="dateForExchenge">
+         </v-col>
+         <v-col>
+           <v-btn 
+            color="primary"
+            size="small"
+            @click="setDate"
+           >
+            OK
+           </v-btn>
+         </v-col>
+       </v-row>
      </v-card-header-text>
-     <!-- End -->
+     
     </v-card>
+    <!-- End -->
     <v-card min-width="600px" >
      <v-card-header>
        <v-row justify="center">
@@ -147,7 +166,7 @@
            </tr>
            <tr v-if="overTime > 0">
              <td>Over time cash: </td>
-             <td>{{overTimeCach.toFixed(2)}} $</td>
+             <td>{{overTimeCash.toFixed(2)}} $</td>
            </tr>
            <tr v-if="input__test">
              <td>Time per test: </td>
@@ -170,15 +189,13 @@
                 {{result + ' $'}}
                 <span v-if="this.dollarRate > 0"> | {{ exchangeMonayToUAH.toFixed(2) + ' UAH'}}</span>
                 <v-btn
-                    icon
+                    color="info"
+                    icon="mdi-information-outline"
                     size="x-small"
                     @click="more__info = !more__info"
                     class="mb-1 info__icon"
                     elevation="0"
                 >
-                  <v-icon size="small">
-                    mdi-information-outline
-                  </v-icon>
                 </v-btn>
           </v-col>
      </v-row>
@@ -191,6 +208,7 @@
 <script>
 import { defineComponent } from 'vue';
 import axios from 'axios'
+import {DateTime} from 'luxon'
 export default defineComponent({
   name: "Salary",
 
@@ -215,6 +233,7 @@ export default defineComponent({
       input__currentRateDollar: false,
       more__info: false,
       workDay: 22,
+      dateForExchenge: null,
       // no UI variables
       totalTime: 0,
       overTime: 0,
@@ -228,18 +247,27 @@ export default defineComponent({
       workDayTime: 0,
       infoCurentDollar: null,
       exchangeDate: null,
-      overTimeCach: 0,
+      valut: null,
+      overTimeCash: 0,
       // axios error
-      axiosError: ''
+      axiosError: '',
       }
     },
     mounted(){
+      this.dateForExchenge = DateTime.local().toFormat('kkkk'+'LL'+'dd')
       axios
-        .get('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json')
-        .then(response => (this.infoCurentDollar = response.data[26].rate, this.exchangeDate = response.data[26].exchangedate))
+        .get('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date=' + this.dateForExchenge + '&json')
+        .then(response => (this.valut = response.data[26].cc, this.infoCurentDollar = response.data[26].rate, this.exchangeDate = response.data[26].exchangedate))
         .catch(error => this.infoCurentDollar = error);
     },
     methods:{
+      setDate(){
+        this.dateForExchenge = DateTime.fromISO(this.dateForExchenge).toFormat('kkkk'+'LL'+'dd')
+        axios
+        .get('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date=' + this.dateForExchenge + '&json')
+        .then(response => (this.valut = response.data[26].cc, this.infoCurentDollar = response.data[26].rate, this.exchangeDate = response.data[26].exchangedate))
+        
+      },
       calculateSalary(){
         this.rateOutput = this.rate                                     // Читать выше для чего эта шляпа
         this.workDayTime = this.workDay * 8
@@ -247,8 +275,7 @@ export default defineComponent({
         this.overTime = this.totalTime - this.workDayTime
         this.overRate = this.rate * 1.5
         this.totalTestPercent = (this.firstTest + this.secondTest) / 2
-        this.overTimeCach = this.overTime * this.overRate
-
+        this.overTimeCash = this.overTime * this.overRate
 
         if (this.totalTestPercent >= 91){
           this.timeTest = 8
@@ -289,10 +316,7 @@ export default defineComponent({
       }
     },
     
-      
-    
     computed:{
-    
       plus4percentWeekend(){
         return this.totalMoney / 100 * (this.input__4percentWeekend * 4)
       },
