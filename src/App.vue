@@ -28,7 +28,7 @@ html{
 .container{
   padding-top: 60px;
   height: 100vh;
-  background-color: #EEEEEE;
+  background: #EEEEEE url("./assets/dot-grid.png") repeat left top ;
 }
 .center__container{
   display: flex;

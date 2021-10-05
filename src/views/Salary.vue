@@ -74,7 +74,8 @@
            <input type="number" v-model.number="cashBonus" placeholder="Cash bonus">
          </v-col>
        </v-row>
-       <v-row justify="center" v-if="input__dollarExchange">
+       <v-row justify="center" v-if="input__dollarExchange" align="center" >
+         <v-col ></v-col>
          <v-col cols="6" style="text-align: center">
            <v-badge
             icon=" mdi-currency-usd"
@@ -83,10 +84,16 @@
             @click="inputCurencyUsdRare"
             title="Current rate USD"
            >
-           <input type="number" v-model.number="dollarRate" placeholder="Dollar rate">
+            <input type="number" v-model.number="dollarRate" placeholder="Dollar rate">
            </v-badge>
          </v-col>
+         <v-col  cols="3">
+           <label class="checkbox">
+              <input type="checkbox" v-model="input__fivePercentTax"> <span>5% tax</span>
+            </label>
+         </v-col>
        </v-row>
+       
      </v-card-header-text>
      <!-- End inputs data -->
      <!-- Checkbox  -->
@@ -125,6 +132,9 @@
              <input type="checkbox" v-model="input__dollarExchange"> <span>$ exchange</span>
            </label>
          </v-col>
+         <!-- <v-col cols="3" style="text-align: left">
+           
+         </v-col> -->
        </v-row>
        </v-col>
        
@@ -180,6 +190,10 @@
              <td>TimeX2 cash: </td>
              <td>{{plusTimeX2}} $</td>
            </tr>
+           <tr v-if="input__fivePercentTax">
+             <td>5% tax: </td>
+             <td>{{fivePercentTax.toFixed(2)}} $</td>
+           </tr>
          </table>
          </v-col>
      </v-row>
@@ -231,6 +245,7 @@ export default defineComponent({
       input__4percentWeekend: false,
       input__dollarExchange: false,
       input__currentRateDollar: false,
+      input__fivePercentTax: false,
       more__info: false,
       workDay: 22,
       dateForExchenge: null,
@@ -338,7 +353,11 @@ export default defineComponent({
       },
       exchangeMonayToUAH(){
         return this.result * this.dollarRate
+      },
+      fivePercentTax(){
+        return this.exchangeMonayToUAH / 100 * (this.input__fivePercentTax * 5); 
       }
+
     },
     })
 </script>
