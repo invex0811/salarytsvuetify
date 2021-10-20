@@ -75,7 +75,7 @@ export default defineComponent({
       links: [
         
         {img: 'mdi-menu', title: 'Salary', url: '/Salary'},
-        // {img: 'fi-rr-time-forward-ten', title: 'Map states', url: '/mapStatesUSA'},
+        //{img: 'fi-rr-time-forward-ten', title: 'Gap date time', url: '/gapDateTime'},
 
       ]
     }

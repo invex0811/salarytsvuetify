@@ -16,10 +16,10 @@ const routes = [
     component: () => import('@/views/Salary.vue')
   },
   {
-    path: '/mapStatesUSA',
-    name: 'mapStatesUSA',
+    path: '/gapDateTime',
+    name: 'gapDateTime',
     meta: {layout:'MainLayout'},
-    component: () => import('@/views/MapStatesUSA.vue')
+    component: () => import('@/views/GapDateTime.vue')
   },
   
 ]

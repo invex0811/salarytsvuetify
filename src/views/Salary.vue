@@ -192,7 +192,7 @@
            </tr>
            <tr v-if="input__fivePercentTax">
              <td>5% tax: </td>
-             <td>{{fivePercentTax.toFixed(2)}} $</td>
+             <td>{{fivePercentTax.toFixed(2)}} ₴</td>
            </tr>
          </table>
          </v-col>
